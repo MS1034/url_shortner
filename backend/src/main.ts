@@ -8,6 +8,8 @@ async function bootstrap() {
   app.useGlobalFilters(new HttpExceptionFilter());
   const reflector = app.get(Reflector);
   app.useGlobalInterceptors(new ResponseInterceptor(reflector));
+  app.setGlobalPrefix('api/v1');
+  app.enableCors();
   await app.listen(process.env.PORT);
 }
 bootstrap();

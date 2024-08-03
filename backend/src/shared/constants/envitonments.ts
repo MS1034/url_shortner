@@ -1,5 +1,5 @@
 export enum ENVIRONMENT_NAMES {
-  PRODUCTION = 'Production',
+  PRODUCTION = 'production',
   DEVELOPMENT = 'development',
   STAGING = 'staging',
   LOCAL = 'local',
