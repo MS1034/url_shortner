@@ -22,21 +22,31 @@ async function main() {
   });
   const subhan = await prisma.user.upsert({
     where: { email: 'muhammadsubhan5701@gmail.com' },
-    update: {},
+    update: {
+      email: 'muhammadsubhan5701@gmail.com',
+      username: 'muhammadsubhan5701',
+      password_hash: await bcrypt.hash('Subhan123', 10),
+      role_id: 1,
+    },
     create: {
       email: 'muhammadsubhan5701@gmail.com',
       username: 'muhammadsubhan5701',
-      password_hash: await bcrypt.hash('123', 10),
+      password_hash: await bcrypt.hash('Subhan123', 10),
       role_id: 1,
     },
   });
   const hoco = await prisma.user.upsert({
     where: { email: 'hoco1092@gmail.com' },
-    update: {},
+    update: {
+      email: 'hoco1092@gmail.com',
+      username: 'hoco1092',
+      password_hash: await bcrypt.hash('Subhan123', 10),
+      role_id: 2,
+    },
     create: {
       email: 'hoco1092@gmail.com',
       username: 'hoco1092',
-      password_hash: await bcrypt.hash('123', 10),
+      password_hash: await bcrypt.hash('Subhan123', 10),
       role_id: 2,
     },
   });

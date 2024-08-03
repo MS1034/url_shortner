@@ -1,8 +1,8 @@
 -- CreateEnum
-CREATE TYPE "UrlStatus" AS ENUM ('active', 'inactive');
+CREATE TYPE "StatusEnum" AS ENUM ('ACTIVE', 'INACTIVE');
 
 -- CreateEnum
-CREATE TYPE "UrlType" AS ENUM ('store', 'product', 'misc');
+CREATE TYPE "UrlTypeEnum" AS ENUM ('STORE', 'PRODUCT', 'MISC');
 
 -- CreateTable
 CREATE TABLE "ApiKey" (
@@ -11,7 +11,7 @@ CREATE TABLE "ApiKey" (
     "api_key" VARCHAR(255) NOT NULL,
     "created_at" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "expires_at" TIMESTAMP(6),
-    "updated_at" TIMESTAMP(3),
+    "updated_at" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "deleted_at" TIMESTAMP(6),
     "is_deleted" BOOLEAN NOT NULL DEFAULT false,
 
@@ -27,7 +27,7 @@ CREATE TABLE "AuditLog" (
     "change_date" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "details" TEXT,
     "created_at" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3),
+    "updated_at" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "deleted_at" TIMESTAMP(6),
     "is_deleted" BOOLEAN NOT NULL DEFAULT false,
 
@@ -55,12 +55,12 @@ CREATE TABLE "Url" (
     "short_url" VARCHAR(20) NOT NULL,
     "logo_id" INTEGER,
     "tag_id" INTEGER,
-    "url_type" "UrlType" NOT NULL,
+    "url_type" "UrlTypeEnum",
     "associated" BOOLEAN NOT NULL DEFAULT false,
     "expiration_date" DATE,
-    "status" "UrlStatus" NOT NULL DEFAULT 'active',
+    "status" "StatusEnum" NOT NULL DEFAULT 'ACTIVE',
     "created_at" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "deleted_at" TIMESTAMP(6),
     "is_deleted" BOOLEAN NOT NULL DEFAULT false,
     "is_pre_generated" BOOLEAN NOT NULL DEFAULT false,
@@ -81,7 +81,7 @@ CREATE TABLE "UrlClick" (
     "country" VARCHAR(50),
     "city" VARCHAR(50),
     "created_at" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3),
+    "updated_at" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "deleted_at" TIMESTAMP(6),
     "is_deleted" BOOLEAN NOT NULL DEFAULT false,
 
@@ -94,7 +94,7 @@ CREATE TABLE "UrlTag" (
     "user_id" UUID NOT NULL,
     "tag_name" VARCHAR(50) NOT NULL,
     "created_at" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3),
+    "updated_at" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "deleted_at" TIMESTAMP(6),
     "is_deleted" BOOLEAN NOT NULL DEFAULT false,
 
@@ -107,9 +107,9 @@ CREATE TABLE "User" (
     "username" VARCHAR(50) NOT NULL,
     "email" VARCHAR(100) NOT NULL,
     "password_hash" VARCHAR(255) NOT NULL,
-    "role_id" INTEGER,
+    "role_id" INTEGER NOT NULL,
     "created_at" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3),
+    "updated_at" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "deleted_at" TIMESTAMP(6),
     "is_deleted" BOOLEAN NOT NULL DEFAULT false,
 
@@ -122,7 +122,7 @@ CREATE TABLE "UserRole" (
     "role_name" VARCHAR(50) NOT NULL,
     "description" TEXT,
     "created_at" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3),
+    "updated_at" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "deleted_at" TIMESTAMP(6),
     "is_deleted" BOOLEAN NOT NULL DEFAULT false,
 
@@ -173,4 +173,3 @@ ALTER TABLE "UrlTag" ADD CONSTRAINT "UrlTag_user_id_fkey" FOREIGN KEY ("user_id"
 
 -- AddForeignKey
 ALTER TABLE "User" ADD CONSTRAINT "User_role_id_fkey" FOREIGN KEY ("role_id") REFERENCES "UserRole"("role_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-
