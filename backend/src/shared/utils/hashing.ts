@@ -20,6 +20,6 @@ export default class PasswordHelper {
     return isMatch;
   };
 
-  static validatePassword = async (password: string): Promise<boolean> =>
+  static validatePassword = (password: string): boolean =>
     this.regex.test(password);
 }

@@ -12,10 +12,10 @@ async function main() {
     },
   });
   const regularUser = await prisma.userRole.upsert({
-    where: { role_name: 'regular-user' },
+    where: { role_name: 'user' },
     update: {},
     create: {
-      role_name: 'regular-user',
+      role_name: 'user',
       description:
         'User with access to manage short urls and entities associated with short urls.',
     },

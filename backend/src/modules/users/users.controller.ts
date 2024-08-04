@@ -20,7 +20,8 @@ export class UsersController {
 
   @Post()
   async create(@Body() createUserDto: Prisma.UserCreateInput): Promise<User> {
-    return this.usersService.create(createUserDto);``
+    return this.usersService.create(createUserDto);
+  
   }
 
   // @Get()
@@ -40,7 +41,7 @@ export class UsersController {
 
   @Get(':id')
   @Serialize(UserResponseDto)
-  async findOne(@Param('id') user_id: string): Promise<UserResponseDto | null> {
+  async findOne(@Param('id') user_id: string): Promise<User | null> {
     return this.usersService.findOne(user_id);
   }
 

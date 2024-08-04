@@ -1,4 +1,5 @@
-import { Expose } from 'class-transformer';
+import { UserRole } from '@prisma/client';
+import { Expose, Transform } from 'class-transformer';
 
 export class UserResponseDto {
   @Expose()
@@ -24,8 +25,16 @@ export class UserResponseDto {
 
   @Expose()
   is_deleted: boolean;
-}
 
+  @Expose()
+  @Transform(({ value }) => {
+    if (value && typeof value === 'object') {
+      return value.role_name;
+    }
+    return value;
+  })
+  user_role: UserRole;
+}
 export class UsersResponseDto {
   @Expose()
   users: UserResponseDto[];

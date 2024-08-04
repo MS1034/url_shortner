@@ -21,11 +21,30 @@ export class UsersRepository {
   //   }
 
   async findAll(): Promise<User[]> {
-    return this.prisma.user.findMany();
+    return this.prisma.user.findMany({
+      include: {
+        user_role: true,
+      },
+    });
   }
+
   async findOne(user_id: string): Promise<User | null> {
     return this.prisma.user.findUnique({
       where: { user_id },
+      include: {
+        user_role: true,
+      },
+    });
+  }
+
+  async findByEmailorUsername(key: string): Promise<User> {
+    return await this.prisma.user.findFirst({
+      include: {
+        user_role: true,
+      },
+      where: {
+        OR: [{ email: key }, { username: key }],
+      },
     });
   }
 
