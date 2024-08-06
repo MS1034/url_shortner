@@ -1,9 +1,18 @@
-import Image from "next/image";
+import JWTHelper from "@/commons/helpers/JwtHelper";
+import Link from "next/link";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-     
+    <main>
+      <div>
+        <Link href="/login">
+          Login
+          {/* {JWTHelper.isAuthenticated() ? "Logout" : "Login"} */}
+        </Link>
+      </div>
+      <div>
+        <Link href="/dashboard">Dashboard</Link>
+      </div>
     </main>
   );
 }
