@@ -4,12 +4,14 @@ import { Post, Get, Body, Query } from '@nestjs/common';
 import { Serialize } from 'src/common/decorators/serialize/serialize.decorator';
 import { AuthResponseDto } from './dtos/response-auth.dto';
 import PasswordHelper from 'src/shared/utils/hashing';
+import { Public } from 'src/common/decorators/public/public.decorator';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('/signup')
+  @Public()
   @Serialize(AuthResponseDto)
   async signup(@Body() body): Promise<any> {
     const { email, password } = body;
@@ -28,6 +30,7 @@ export class AuthController {
   }
 
   @Post('/login')
+  @Public()
   @Serialize(AuthResponseDto)
   async login(@Body() body): Promise<any> {
     const { email, password } = body;
@@ -41,6 +44,7 @@ export class AuthController {
   }
 
   @Get('/check-username')
+  @Public()
   async checkUsername(@Query('username') username: string) {
     const user = await this.authService.checkUserName(username);
     if (user) {

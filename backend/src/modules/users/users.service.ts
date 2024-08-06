@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { UsersRepository } from './user.repository';
 import { Prisma, User } from '@prisma/client';
-import { PaginateOptions, PaginatedResult } from 'src/common/helpers/paginator';
+import { PaginateOptions, PaginatedResult } from 'src/shared/utils/paginator';
 
 @Injectable()
 export class UsersService {

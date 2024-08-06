@@ -12,7 +12,7 @@ import { UsersService } from './users.service';
 import { Serialize } from 'src/common/decorators/serialize/serialize.decorator';
 import { UserResponseDto } from './dtos/response-user.dto';
 import { Prisma, User } from '@prisma/client';
-import { PaginateOptions, PaginatedResult } from 'src/common/helpers/paginator';
+import { PaginateOptions, PaginatedResult } from 'src/shared/utils/paginator';
 
 @Controller('users')
 export class UsersController {
@@ -21,7 +21,6 @@ export class UsersController {
   @Post()
   async create(@Body() createUserDto: Prisma.UserCreateInput): Promise<User> {
     return this.usersService.create(createUserDto);
-  
   }
 
   // @Get()

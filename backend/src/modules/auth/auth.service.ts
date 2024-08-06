@@ -11,9 +11,7 @@ export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
-  ) {
-    // this.signUp('muhammadsubhan57012@gmail.com', '0000');
-  }
+  ) {}
 
   async signIn(username: string, password: string): Promise<any> {
     const user: User = await this.usersService.findByEmailorUsername(username);
@@ -57,15 +55,15 @@ export class AuthService {
       password_hash,
       username,
       user_role: {
-        connect: { role_id: 1 },
+        connect: { role_name: 'user' },
       },
     };
     const user: User = await this.usersService.create(createDTO);
-    const payload = {
-      id: user.user_id,
-      username: user.username,
-      role_id: user.role_id,
-    };
+    // const payload = {
+    //   id: user.user_id,
+    //   username: user.username,
+    //   role_id: user.role_id,
+    // };
     // const token = await this.jwtService.signAsync(payload);
 
     // return { ...user, token };
@@ -74,5 +72,9 @@ export class AuthService {
 
   async checkUserName(username: string) {
     return this.usersService.findByEmailorUsername(username);
+  }
+
+  validateToken(token: string) {
+    return this.jwtService.verify(token);
   }
 }

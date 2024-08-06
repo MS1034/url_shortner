@@ -5,7 +5,7 @@ import {
   paginator,
   PaginateOptions,
   PaginatedResult,
-} from 'src/common/helpers/paginator';
+} from 'src/shared/utils/paginator';
 
 @Injectable()
 export class UsersRepository {
