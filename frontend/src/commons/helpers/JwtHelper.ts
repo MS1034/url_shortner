@@ -28,4 +28,7 @@ export default class JWTHelper {
 
     return localStorage.getItem(tokenKey) ? true : false;
   }
+  static clearToken() {
+    localStorage.removeItem(tokenKey);
+  }
 }

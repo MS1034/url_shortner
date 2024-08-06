@@ -1,7 +1,19 @@
-import React from "react";
+"use client";
+import JWTHelper from "@/commons/helpers/JwtHelper";
+import withAuth from "@/components/WithAuth";
+import Link from "next/link";
 
 function page() {
-  return <div>Dashboard</div>;
+  return (
+    <Link
+      href="/login"
+      onClick={() => {
+        JWTHelper.clearToken();
+      }}
+    >
+      Logout
+    </Link>
+  );
 }
 
-export default page;
+export default withAuth(page, true, ["admin", "user"]);

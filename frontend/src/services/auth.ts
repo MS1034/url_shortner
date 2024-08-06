@@ -1,3 +1,4 @@
+import JWTHelper from "@/commons/helpers/JwtHelper";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const authApi = createApi({
@@ -5,6 +6,14 @@ export const authApi = createApi({
   baseQuery: fetchBaseQuery({
     // TODO: add in config file or env
     baseUrl: process.env.BASE_URL || "http://localhost:5000/api/v1",
+
+    prepareHeaders: (headers, { getState }) => {
+      const token = JWTHelper.getToken();
+      if (token) {
+        headers.set("authorization", `Bearer ${token}`);
+      }
+      return headers;
+    },
   }),
   endpoints: (builder) => ({
     login: builder.mutation({

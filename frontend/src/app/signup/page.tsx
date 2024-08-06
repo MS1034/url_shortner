@@ -12,7 +12,6 @@ import {
 } from "@/services/auth";
 import { generateFromEmail } from "unique-username-generator";
 import toast from "react-hot-toast";
-import { ExecOptions } from "child_process";
 
 const sacramento = Sacramento({
   subsets: ["latin"],
@@ -52,15 +51,28 @@ function SignupPage(): JSX.Element {
   const handleUsernameBlur = async (
     event: React.FocusEvent<HTMLInputElement>
   ) => {
-    const { value } = event.target;
-    const { data } = await checkUsername(value);
-    if (!data?.result?.available) {
-      setError("username", {
-        type: "manual",
-        message: "Username is already taken",
-      });
-    } else {
-      clearErrors("username");
+    try {
+      const { value } = event.target;
+      const { data } = await checkUsername(value);
+      if (data) {
+        if (!data?.result?.available) {
+          setError("username", {
+            type: "manual",
+            message: "Username is already taken",
+          });
+        } else {
+          clearErrors("username");
+        }
+      } else throw new Error("Server not connected");
+    } catch (err) {
+      console.error("Signup failed", JSON.stringify(err));
+      toast.error(
+        `${
+          navigator.onLine
+            ? "Failed to connect with server"
+            : "Check your internet connection"
+        }`
+      );
     }
   };
 
@@ -107,7 +119,7 @@ function SignupPage(): JSX.Element {
         throw new Error(res.message || "Unknown error occurred");
       }
     } catch (err) {
-      let errorMessage = "Signup failed";
+      let errorMessage = "Signup failed. ";
 
       if (err instanceof Error) {
         errorMessage = err?.message || errorMessage;
@@ -120,8 +132,12 @@ function SignupPage(): JSX.Element {
         errorMessage = (err as any).data.message;
       }
 
-      console.error("Signup failed", err);
-      toast.error(`${errorMessage}`);
+      console.error("Signup failed", JSON.stringify(err));
+      toast.error(
+        `${errorMessage} ${
+          navigator.onLine ? "" : "Check your internet connection"
+        }`
+      );
     }
   };
 
@@ -156,7 +172,7 @@ function SignupPage(): JSX.Element {
                     {...register("email", { required: "Email is required." })}
                     className="block w-full h-9 rounded-md border border-black px-3 py-6 pl-14 text-sm placeholder-black"
                     placeholder="Email Address"
-                    onChange={handleEmailBlur}
+                    onBlur={handleEmailBlur}
                   />
                   {errors.email && (
                     <span className="flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1">
@@ -194,7 +210,7 @@ function SignupPage(): JSX.Element {
                 <div className="relative mb-4">
                   <PasswordBox
                     name="confirmPassword"
-                    placeholder="Re-enter Password"
+                    placeholder="Confirm Password"
                     register={register}
                     onBlur={validateConfirmPassword}
                     error={errors.confirmPassword?.message}
