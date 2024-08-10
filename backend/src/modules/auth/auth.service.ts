@@ -5,6 +5,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Prisma, User } from '@prisma/client';
 import { access } from 'fs';
 import { generateFromEmail } from 'unique-username-generator';
+import { JwtPayload } from './interfaces/jwt-payload.interface';
 
 @Injectable()
 export class AuthService {
@@ -47,9 +48,12 @@ export class AuthService {
     };
   }
 
-  async signUp(email: string, password: string): Promise<any> {
+  async signUp(
+    email: string,
+    password: string,
+    username: string,
+  ): Promise<any> {
     const password_hash = await PasswordHelper.getPasswordHash(password);
-    const username = generateFromEmail(email, 5);
     const createDTO: Prisma.UserCreateInput = {
       email,
       password_hash,
@@ -59,14 +63,6 @@ export class AuthService {
       },
     };
     const user: User = await this.usersService.create(createDTO);
-    // const payload = {
-    //   id: user.user_id,
-    //   username: user.username,
-    //   role_id: user.role_id,
-    // };
-    // const token = await this.jwtService.signAsync(payload);
-
-    // return { ...user, token };
     return user;
   }
 
@@ -74,7 +70,7 @@ export class AuthService {
     return this.usersService.findByEmailorUsername(username);
   }
 
-  validateToken(token: string) {
-    return this.jwtService.verify(token);
+  async validate(payload: JwtPayload) {
+    return this.usersService.findByEmailorUsername(payload.username);
   }
 }

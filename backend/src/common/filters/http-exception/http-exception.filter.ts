@@ -23,6 +23,22 @@ export class HttpExceptionFilter<T> implements ExceptionFilter {
 
     let message = exception.message;
 
+    //TODO: Add all prisma errors in dictionary with user friendly messages and handle them
+    // let isPrismaError = false;
+    // isPrismaError =
+    //   isPrismaError ||
+    //   exception instanceof Prisma.PrismaClientKnownRequestError;
+    // isPrismaError =
+    //   isPrismaError ||
+    //   exception instanceof Prisma.PrismaClientInitializationError;
+    // isPrismaError =
+    //   isPrismaError || exception instanceof Prisma.PrismaClientValidationError;
+    // isPrismaError =
+    //   isPrismaError || exception instanceof Prisma.PrismaClientRustPanicError;
+    // isPrismaError =
+    //   isPrismaError ||
+    //   exception instanceof Prisma.PrismaClientUnknownRequestError;
+
     if (exception instanceof Prisma.PrismaClientKnownRequestError) {
       const errorInfo = PRISMA_ERRORS[exception.code];
       if (errorInfo) {

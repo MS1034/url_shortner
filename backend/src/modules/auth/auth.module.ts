@@ -1,23 +1,20 @@
 import { Module } from '@nestjs/common';
-import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { UsersRepository } from '../users/user.repository';
-import { UsersService } from '../users/users.service';
-import { UsersModule } from '../users/users.module';
+import { AuthController } from './auth.controller';
 import { JwtModule } from '@nestjs/jwt';
+import { JwtStrategy } from './jwt.strategy'; // <-- Import the strategy
+import { UsersModule } from '../users/users.module';
 
 @Module({
-  controllers: [AuthController],
-  providers: [AuthService],
   imports: [
     UsersModule,
     JwtModule.register({
       global: true,
       secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: '1h' },
+      signOptions: { expiresIn: '7d' },
     }),
   ],
+  providers: [AuthService, JwtStrategy],
+  controllers: [AuthController],
 })
-export class AuthModule {
-  
-}
+export class AuthModule {}

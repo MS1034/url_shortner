@@ -41,17 +41,18 @@ export class HttpLoggerMiddleware implements NestMiddleware {
       const responseTime = `+${Math.floor(responseTimeInt)}ms`;
       const contentLength = response.get('content-length');
       const { statusCode } = response;
-      const responseBody = Buffer.concat(chunks).toString('utf8');
+      console.log(chunks);
+      // const responseBody = Buffer.concat(chunks).toString('utf8');
 
       //TODO: Pass error trace here after standarizing the error response
       if (this.isErroneousStatusCode(statusCode))
         this.loggerService.error(
-          `[RESP] ${userAgent}  ${ip}  ${method} ${originalUrl} ${query} ${headers} ${params} ${statusCode} ${contentLength} ${responseTime} ${responseBody}`,
+          `[RESP] ${userAgent}  ${ip}  ${method} ${originalUrl} ${query} ${headers} ${params} ${statusCode} ${contentLength} ${responseTime} `,
           {},
         );
       else
         this.loggerService.log(
-          `[RESP] ${userAgent}  ${ip}  ${method} ${originalUrl} ${statusCode} ${contentLength} ${responseTime} ${responseBody}`,
+          `[RESP] ${userAgent}  ${ip}  ${method} ${originalUrl} ${statusCode} ${contentLength} ${responseTime} `,
         );
     });
 

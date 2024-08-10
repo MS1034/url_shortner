@@ -14,7 +14,7 @@ export class AuthController {
   @Public()
   @Serialize(AuthResponseDto)
   async signup(@Body() body): Promise<any> {
-    const { email, password } = body;
+    const { email, password, username } = body;
     if (!email || !password) {
       throw new BadRequestException(
         'Email and Password are required to signup',
@@ -26,7 +26,7 @@ export class AuthController {
       );
     }
 
-    return this.authService.signUp(email, password);
+    return this.authService.signUp(email, password, username);
   }
 
   @Post('/login')
