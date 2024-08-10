@@ -7,7 +7,7 @@ export default class PasswordHelper {
 
   static getPasswordHash = async (password: string): Promise<string> => {
     const hash = await bcrypt.hash(password, this.saltOrRounds);
-    console.log('Hash:', hash);
+    // console.log('Hash:', hash);
     return hash;
   };
 
@@ -16,7 +16,7 @@ export default class PasswordHelper {
     password: string,
   ): Promise<boolean> => {
     const isMatch = await bcrypt.compare(hash, password);
-    console.log('Password match:', isMatch);
+    // console.log('Password match:', isMatch);
     return isMatch;
   };
 

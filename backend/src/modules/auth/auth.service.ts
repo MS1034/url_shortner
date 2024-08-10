@@ -25,7 +25,7 @@ export class AuthService {
       password,
       user.password_hash,
     );
-    console.log(isAuthorized);
+    // console.log(isAuthorized);
     if (!isAuthorized || user.is_deleted) {
       throw new UnauthorizedException('Wrong password');
     }
@@ -39,7 +39,7 @@ export class AuthService {
     if (user['user_role'] && typeof user['user_role'] == 'object') {
       payload['user_role'] = user['user_role']['role_name'];
     }
-    console.log(payload['user_role']);
+    // console.log(payload['user_role']);
 
     const token = await this.jwtService.signAsync(payload);
     return {

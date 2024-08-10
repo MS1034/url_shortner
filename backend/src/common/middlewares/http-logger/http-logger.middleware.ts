@@ -41,7 +41,7 @@ export class HttpLoggerMiddleware implements NestMiddleware {
       const responseTime = `+${Math.floor(responseTimeInt)}ms`;
       const contentLength = response.get('content-length');
       const { statusCode } = response;
-      console.log(chunks);
+      // console.log(chunks);
       // const responseBody = Buffer.concat(chunks).toString('utf8');
 
       //TODO: Pass error trace here after standarizing the error response

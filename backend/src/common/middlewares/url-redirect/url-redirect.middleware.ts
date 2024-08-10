@@ -8,8 +8,8 @@ export class UrlRedirectMiddleware implements NestMiddleware {
 
   async use(req: Request, res: Response, next: NextFunction): Promise<void> {
     const path = req.originalUrl.replace('/api/v1/', ''); // Remove leading slash
-    console.log(path);
-    console.log('path');
+    // console.log(path);
+    // console.log('path');
 
     if (path.length === 14 && /^[a-zA-Z0-9-_]+$/.test(path)) {
       try {
