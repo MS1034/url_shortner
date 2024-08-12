@@ -3,7 +3,6 @@
 import React, { use } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { LuLock, LuMail } from "react-icons/lu";
-import { Sacramento } from "next/font/google";
 import Link from "next/link";
 import { useLoginMutation } from "../../services/auth";
 import { useDispatch } from "react-redux";
@@ -14,11 +13,7 @@ import toast from "react-hot-toast";
 import { redirect, useRouter } from "next/navigation";
 import JWTHelper from "@/commons/helpers/JwtHelper";
 import withAuth from "@/components/WithAuth";
-
-const sacramento = Sacramento({
-  subsets: ["latin"],
-  weight: ["400"],
-});
+import { sacramento } from "@/commons/helpers/FontHelper";
 
 interface IFormInput {
   email: string;
@@ -110,7 +105,7 @@ function SignIn(): JSX.Element {
             </div>
             <p className="text-sm text-gray-500 sm:text-sm">
               Don't have an account?
-              <Link href="/signup" className="font-bold text-black">
+              <Link href="/signup" className="font-bold text-slate-500">
                 <span> </span> Sign Up
               </Link>
             </p>

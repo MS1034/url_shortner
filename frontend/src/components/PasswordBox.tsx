@@ -30,7 +30,7 @@ function PasswordBox({
         <input
           type={showPassword ? "text" : "password"}
           {...register(name, { required: `${placeholder} is required.` })} // Add required validation
-          className={`block h-9 w-full rounded-md border border-solid border-black px-3 py-6 pl-14 text-sm text-black placeholder:text-black ${
+          className={`block h-9 w-full rounded-md border border-solid border-black px-3 py-6 pl-14 text-sm text-slate-500 placeholder:text-slate-500 ${
             error ? "border-red-500" : ""
           }`}
           placeholder={placeholder}
