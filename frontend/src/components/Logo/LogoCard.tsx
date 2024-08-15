@@ -33,7 +33,7 @@ const LogoCard: FC<LogoCardProps> = ({
       <div className="flex items-center justify-center mb-4">
         {logo.blurHash ? (
           <Image
-            id={logo.logo_id}
+            id={logo.logo_id.toString()}
             className="max-w-full rounded-lg"
             src={logo.logo_path}
             width={size.w}
@@ -45,7 +45,7 @@ const LogoCard: FC<LogoCardProps> = ({
           />
         ) : (
           <Image
-            id={logo.logo_id}
+            id={logo.logo_id.toString()}
             className="max-w-full rounded-lg"
             src={logo.logo_path}
             width={size.w}
@@ -70,7 +70,7 @@ const LogoCard: FC<LogoCardProps> = ({
         )}
         {onDelete && (
           <button
-            onClick={() => onDelete(logo.logo_id)}
+            onClick={() => onDelete(logo.logo_id.toString())}
             className="inline-flex items-center justify-center gap-2.5 rounded-md border border-meta-1  p-4 text-center font-medium text-meta-1 hover:bg-opacity-90 lg:px-8 xl:px-10"
           >
             <span>

@@ -9,12 +9,14 @@ interface QrCodeModalProps {
   isOpen: boolean;
   onRequestClose: () => void;
   shortLink: string;
+  image?: string;
 }
 
 const QrCodeModal: React.FC<QrCodeModalProps> = ({
   isOpen,
   onRequestClose,
   shortLink,
+  image,
 }) => {
   const qrCodeContainerRef = React.useRef<HTMLDivElement | null>(null);
   const [qrCode, setQrCode] = React.useState<QRCodeStyling | null>(null);
@@ -26,8 +28,7 @@ const QrCodeModal: React.FC<QrCodeModalProps> = ({
         height: 300,
         type: "svg",
         data: shortLink,
-        image:
-          "https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg",
+        image: image,
         dotsOptions: {
           color: "#000000",
           type: "rounded",

@@ -95,7 +95,7 @@ const BrandLogoPage = () => {
         dispatch(
           setLogos(
             logos.map((logo) =>
-              logo.logo_id === editMode.id ? res.result : logo
+              logo.logo_id === +editMode.id ? res.result : logo
             )
           )
         );
@@ -176,14 +176,18 @@ const BrandLogoPage = () => {
   const handleDelete = async (id: string) => {
     try {
       await softDeleteLogo(id).unwrap();
-      dispatch(deleteLogo(id));
+
+      // Use the latest logos array to filter out the deleted logo
+      const updatedLogos = logos.filter((logo) => logo.logo_id !== +id);
+
+      console.log(logos);
+      // Dispatch the updated logos array
+      dispatch(setLogos(updatedLogos));
+
       toast.success("Logo deleted successfully");
     } catch (err) {
       if (err && typeof err === "object" && "status" in err) {
-        const error = err as {
-          status: number;
-          data?: { message?: string };
-        };
+        const error = err as { status: number; data?: { message?: string } };
         const status = error.status;
         const message = error.data?.message || "An error occurred";
         if (status === 404) {

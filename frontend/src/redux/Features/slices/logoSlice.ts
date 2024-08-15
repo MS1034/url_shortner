@@ -5,7 +5,7 @@ interface LogoState {
   page: number;
   hasMore: boolean;
   logos: BrandLogo[];
-  editMode: { id?: string; preview?: string } | null;
+  editMode: { id?: number; preview?: string } | null;
 }
 
 const initialState: LogoState = {
@@ -38,12 +38,12 @@ const logoSlice = createSlice({
     },
     deleteLogo: (state, action: PayloadAction<string>) => {
       state.logos = state.logos.filter(
-        (logo) => logo.logo_id !== action.payload
+        (logo) => logo.logo_id !== +action.payload
       );
     },
     setEditMode: (
       state,
-      action: PayloadAction<{ id?: string; preview?: string } | null>
+      action: PayloadAction<{ id?: number; preview?: string } | null>
     ) => {
       state.editMode = action.payload;
     },
