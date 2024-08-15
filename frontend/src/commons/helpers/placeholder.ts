@@ -5,7 +5,10 @@ const baseUrl =
 
 export async function dynamicBlurDataUrl(url: string) {
   const base64str = await fetch(
-    `${baseUrl}/_next/image?url=${url}&w=640&q=75`
+    `${baseUrl}/_next/image?url=${url}&w=640&q=75`,
+    {
+      mode: "no-cors",
+    }
   ).then(async (res) =>
     Buffer.from(await res.arrayBuffer()).toString("base64")
   );

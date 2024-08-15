@@ -1,8 +1,8 @@
 "use client";
 
-import React, { use } from "react";
+import React, { CSSProperties, useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { LuLock, LuMail } from "react-icons/lu";
+import { LuMail } from "react-icons/lu";
 import Link from "next/link";
 import { useLoginMutation } from "../../services/auth";
 import { useDispatch } from "react-redux";
@@ -10,11 +10,16 @@ import { setCredentials } from "@/redux/Features/slices/authSlice";
 import { AppDispatch } from "@/redux/store";
 import PasswordBox from "@/components/PasswordBox";
 import toast from "react-hot-toast";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import JWTHelper from "@/commons/helpers/JwtHelper";
-import withAuth from "@/components/WithAuth";
 import { sacramento } from "@/commons/helpers/FontHelper";
+import ClipLoader from "react-spinners/ClipLoader";
+import { BallTriangle, InfinitySpin, Triangle } from "react-loader-spinner";
 
+const override: CSSProperties = {
+  display: "block",
+  margin: "0 auto",
+};
 interface IFormInput {
   email: string;
   password: string;
@@ -27,8 +32,20 @@ function SignIn(): JSX.Element {
     formState: { errors },
   } = useForm<IFormInput>();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [login, { isLoading }] = useLoginMutation();
   const dispatch: AppDispatch = useDispatch();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [authChecked, setAuthChecked] = useState(false);
+
+  useEffect(() => {
+    if (JWTHelper.isAuthenticated()) {
+      const redirectUrl = searchParams.get("redirectUrl") || "/dashboard";
+      router.push(redirectUrl);
+      setIsAuthenticated(true);
+    }
+    setAuthChecked(true);
+  }, [router, searchParams]);
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     try {
@@ -36,6 +53,9 @@ function SignIn(): JSX.Element {
       if (res.status == "401") throw new Error(res.message);
       const { token } = res.result;
       dispatch(setCredentials({ token }));
+
+      const redirectUrl = searchParams.get("redirectUrl") || "/dashboard";
+      router.push(redirectUrl);
     } catch (err) {
       let errorMessage = "Signin failed. ";
       if (err instanceof Error) {
@@ -48,7 +68,7 @@ function SignIn(): JSX.Element {
       ) {
         errorMessage = (err as any).data.message;
       }
-      console.error("Signup failed", JSON.stringify(err));
+      console.error("Signin failed", JSON.stringify(err));
       toast.error(
         `${errorMessage} ${
           navigator.onLine ? "" : "Check your internet connection"
@@ -56,7 +76,23 @@ function SignIn(): JSX.Element {
       );
     }
   };
-  if (JWTHelper.isAuthenticated()) redirect("/dashboard");
+
+  if (!authChecked || isAuthenticated) {
+    return (
+      <div className="h-screen w-full flex justify-center items-center">
+        <Triangle
+          height={100}
+          width={100}
+          color="#10B981"
+          ariaLabel="ball-triangle-loading"
+          wrapperStyle={{}}
+          wrapperClass=""
+          visible={true}
+        />
+      </div>
+    );
+  }
+
   return (
     <section>
       <div className="grid gap-0 md:h-screen md:grid-cols-2">
@@ -124,4 +160,5 @@ function SignIn(): JSX.Element {
     </section>
   );
 }
+
 export default SignIn;

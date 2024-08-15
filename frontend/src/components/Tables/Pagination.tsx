@@ -45,9 +45,9 @@ const Pagination = ({
           <BsChevronRight />
         </button>
       </div>
-      <p className="font-medium text-gray-900 dark:text-white">
+      {/* <p className="font-medium text-gray-900 dark:text-white">
         Showing {currentPage} of {meta.lastPage}
-      </p>
+      </p> */}
     </div>
   );
 };

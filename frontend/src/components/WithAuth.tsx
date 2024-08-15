@@ -1,32 +1,55 @@
 "use client";
+
+import React, { CSSProperties, useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import JWTHelper from "@/commons/helpers/JwtHelper";
-import { RootState } from "../redux/store";
-import { redirect } from "next/navigation";
-import React from "react";
-import { useSelector } from "react-redux";
+import { Triangle } from "react-loader-spinner";
 
 function withAuth(
-  WrappedComponent: any,
+  WrappedComponent: React.ComponentType<any>,
   isAuthRequired: boolean,
   roles: string[]
 ) {
-  console.log("hello");
   return function WithAuth(props: any) {
-    let role;
-    if (JWTHelper.isAuthenticated()) {
+    const [isLoading, setIsLoading] = useState(true);
+    const router = useRouter();
+
+    const checkAuth = useCallback(() => {
+      if (!JWTHelper.isAuthenticated()) {
+        router.push("/login");
+        return;
+      }
+
       const { user_role } = JWTHelper.getRole();
-      role = user_role;
+
+      if (isAuthRequired && user_role && roles.includes(user_role)) {
+        setIsLoading(false);
+      } else {
+        router.push("/protected-route");
+      }
+    }, [router, isAuthRequired, roles]);
+
+    useEffect(() => {
+      checkAuth();
+    }, [checkAuth]);
+
+    if (isLoading) {
+      return (
+        <div className="h-screen w-full top-0 left-0 z-999999 bg-white flex fixed justify-center items-center">
+          <Triangle
+            height={100}
+            width={100}
+            color="#10B981"
+            ariaLabel="triangle-loading"
+            wrapperStyle={{}}
+            wrapperClass=""
+            visible={true}
+          />
+        </div>
+      );
     }
 
-    if (JWTHelper.isAuthenticated()) {
-      if (role && roles.includes(role)) {
-        return <WrappedComponent {...props} />;
-      } else {
-        redirect("/protected-route");
-      }
-    } else {
-      redirect("/login");
-    }
+    return <WrappedComponent {...props} />;
   };
 }
 

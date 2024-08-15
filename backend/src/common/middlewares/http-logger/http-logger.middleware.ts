@@ -16,6 +16,7 @@ export class HttpLoggerMiddleware implements NestMiddleware {
     const startAt = process.hrtime();
     const { method, originalUrl, body, ip, query, headers, params } = request;
     const userAgent = request.get('user-agent') || '';
+    
 
     this.loggerService.log(
       `[REQ] ${userAgent}  ${ip}  ${method} ${originalUrl} ${JSON.stringify(body)}`,
@@ -41,8 +42,6 @@ export class HttpLoggerMiddleware implements NestMiddleware {
       const responseTime = `+${Math.floor(responseTimeInt)}ms`;
       const contentLength = response.get('content-length');
       const { statusCode } = response;
-      // console.log(chunks);
-      // const responseBody = Buffer.concat(chunks).toString('utf8');
 
       //TODO: Pass error trace here after standarizing the error response
       if (this.isErroneousStatusCode(statusCode))

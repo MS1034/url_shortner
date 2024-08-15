@@ -1,6 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import "flatpickr/dist/flatpickr.min.css";
+
+
 
 @layer base {
   body {
@@ -259,3 +262,6 @@ input[type="search"]::-webkit-search-cancel-button {
     @apply  text-slate-500 font-[500]
   }
 }
+
+
+

@@ -3,7 +3,7 @@ export interface LogoListProp {
 }
 
 export type BrandLogo = {
-  logo_id: string;
+  logo_id: number;
   user_id: string | undefined;
   logo_path: string;
   expiration_date: Date | undefined;

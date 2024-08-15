@@ -3,7 +3,6 @@ import { Inter, Poppins } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import StoreProvider from "@/redux/provider";
-import "flatpickr/dist/flatpickr.min.css";
 import localFont from "next/font/local";
 import { satoshi } from "@/commons/helpers/FontHelper";
 

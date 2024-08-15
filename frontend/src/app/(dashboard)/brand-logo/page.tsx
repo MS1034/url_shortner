@@ -6,6 +6,7 @@ import {
   useSoftDeleteLogoMutation,
   useCreateLogoMutation,
   useUpdateLogoMutation,
+  useFetchLogosPaginatedQuery,
 } from "@/services/logo";
 import LogoCard from "@/components/Logo/LogoCard";
 import withAuth from "@/components/WithAuth";
@@ -26,8 +27,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { BrandLogo } from "@/commons/types/Logo";
+import LogoGrid from "@/components/Logo/LogoGrid";
 
-// Updated validation schema
 const logoSchema = z.object({
   logo: z
     .instanceof(File)
@@ -56,12 +57,12 @@ const BrandLogoPage = () => {
   const logos = useSelector((state: RootState) => state.logo.logos);
   const editMode = useSelector((state: RootState) => state.logo.editMode);
 
-  const [preview, setPreview] = useState<string | null>(null); // State to hold image preview
+  const [preview, setPreview] = useState<string | null>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
-  const inputRef = useRef<HTMLInputElement | null>(null); // Ref to file input
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
-  const { data, error, isLoading, isFetching } = useFetchLogosQuery({
+  const { data, error, isLoading, isFetching } = useFetchLogosPaginatedQuery({
     page: page,
     pageSize: 3,
   });
@@ -178,8 +179,24 @@ const BrandLogoPage = () => {
       dispatch(deleteLogo(id));
       toast.success("Logo deleted successfully");
     } catch (err) {
-      console.error("Failed to delete logo:", err);
-      toast.error("Failed to delete logo");
+      if (err && typeof err === "object" && "status" in err) {
+        const error = err as {
+          status: number;
+          data?: { message?: string };
+        };
+        const status = error.status;
+        const message = error.data?.message || "An error occurred";
+        if (status === 404) {
+          toast.error("Logo not found");
+        } else if (status === 403) {
+          toast.error("You are not authorized to delete this Logo");
+        } else {
+          toast.error(message);
+        }
+      } else {
+        toast.error("Failed to delete Logo");
+      }
+      console.error("Failed to delete Logo:", err);
     }
   };
 
@@ -188,7 +205,6 @@ const BrandLogoPage = () => {
       const file = e.target.files[0];
       setValue("logo", file);
       setPreview(URL.createObjectURL(file)); // Set the preview URL
-
       // Reset the preview URL when clearing the input
       if (inputRef.current) {
         inputRef.current.value = "";
@@ -274,20 +290,14 @@ const BrandLogoPage = () => {
           </p>
         ) : (
           <div className="p-4 sm:p-6 xl:p-10">
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3 p-4">
-              {logos.length === 0 && !isLoading ? (
-                <p>No logos available</p>
-              ) : (
-                logos.map((logo) => (
-                  <LogoCard
-                    key={logo.logo_id}
-                    logo={logo}
-                    onEdit={handleEdit}
-                    onDelete={handleDelete}
-                  />
-                ))
-              )}
-            </div>
+            <LogoGrid
+              isLoading={isLoading}
+              logos={logos}
+              handleEdit={handleEdit}
+              handleDelete={handleDelete}
+              size={{ h: 300, w: 300 }}
+            />
+
             <div ref={loadMoreRef} className="text-center">
               {isFetching && "Loading..."}
             </div>

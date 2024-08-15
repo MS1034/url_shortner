@@ -31,12 +31,12 @@ const ModalWrapper: React.FC<ModalWrapperProps> = ({
 
   return (
     <div
-      className="fixed left-0 top-0 z-999999 flex h-full min-h-screen w-full items-center justify-center bg-black/30 px-4 py-5"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 "
       onClick={onRequestClose}
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-md rounded-lg bg-white px-8 py-12 text-center dark:bg-boxdark md:px-17.5 md:py-15"
+        className="w-fit max-w-screen-sm sm:max-w-screen-md md:max-w-screen-lg lg:max-w-screen-xl bg-white dark:bg-boxdark rounded-lg py-2 text-center overflow-auto"
       >
         {children}
       </div>

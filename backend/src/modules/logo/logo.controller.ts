@@ -10,7 +10,6 @@ import {
   UseInterceptors,
   UploadedFile,
   UseGuards,
-  Request,
   Query,
 } from '@nestjs/common';
 import { LogoService } from './logo.service';
@@ -30,19 +29,35 @@ export class LogoController {
     @Body() createLogoDto: Prisma.LogoCreateInput,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    // console.log(req.user);
+    console.log(file);
+    console.log('Subhan');
     // console.log('req.user');
     return this.logoService.create(req.user.user_id, createLogoDto, file);
   }
 
   @Get()
   async findAll(
-    @Request() req,
+    @Req() req,
     @Query() query: { page?: number; pageSize?: number },
   ) {
     const user_id = req.user.user_id;
     if (user_id) {
-      return this.logoService.findAll({
+      if (!query.pageSize) {
+        return this.logoService.findAll(user_id);
+      }
+    }
+    throw new Error('User Not Found');
+  }
+
+  @Get('/paginated')
+  async finPaginated(
+    @Req() req,
+    @Query() query: { page?: number; pageSize?: number },
+  ) {
+    const user_id = req.user.user_id;
+    console.log(user_id);
+    if (user_id) {
+      return this.logoService.findPaginated({
         user_id,
         page: query.page,
         pageSize: query.pageSize,

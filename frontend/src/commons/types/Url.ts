@@ -1,3 +1,6 @@
+import { BrandLogo } from "./Logo";
+import { Tag } from "./Tags";
+
 export interface UrlsListProp {
   urls: Url[];
 }
@@ -12,22 +15,24 @@ export type Url = {
   url_type: UrlTypeEnum;
   associated: Boolean;
   expiration_date: Date | undefined;
-  status: StatusEnum;
+  status: UrlStatusEnum;
   created_at: Date;
   updated_at: Date;
   deleted_at: Date | undefined;
   is_deleted: Boolean;
   is_pre_generated: Boolean;
   associated_at: Date | undefined;
+  logo?: BrandLogo | null;
+  url_tag?: Tag | null;
 };
 
-enum StatusEnum {
-  ACTIVE,
-  INACTIVE,
+export enum UrlStatusEnum {
+  ACTIVE = "Active",
+  INACTIVE = "Inactive",
 }
 
-enum UrlTypeEnum {
-  STORE,
-  PRODUCT,
-  MISC,
+export enum UrlTypeEnum {
+  STORE = "Store",
+  PRODUCT = "Product",
+  MISC = "Misc",
 }

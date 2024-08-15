@@ -13,6 +13,11 @@ import { ResponseInterceptor } from './common/interceptors/response/response.int
 import { AuthGuard } from './common/guards/auth/auth.guard';
 import { Reflector } from '@nestjs/core';
 import { AuthService } from './modules/auth/auth.service';
+import { UrlModule } from './modules/url/url.module';
+import { UrlService } from './modules/url/url.service';
+import { LogoModule } from './modules/logo/logo.module';
+import { CloudinaryModule } from './cloudinary/cloudinary.module';
+import { TagsModule } from './modules/tags/tags.module';
 
 @Module({
   imports: [
@@ -27,6 +32,10 @@ import { AuthService } from './modules/auth/auth.service';
     FiltersModule,
     MiddlewaresModule,
     AuthModule,
+    UrlModule,
+    LogoModule,
+    CloudinaryModule,
+    TagsModule,
   ],
   controllers: [],
   providers: [
@@ -44,6 +53,7 @@ import { AuthService } from './modules/auth/auth.service';
     },
     Reflector,
     AuthService,
+    UrlService,
   ],
 })
 export class AppModule {}

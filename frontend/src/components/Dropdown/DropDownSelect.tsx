@@ -1,17 +1,28 @@
-"use client";
 import React, { useState } from "react";
 import { BsChevronDown } from "react-icons/bs";
+import { number } from "zod";
 
 interface DropdownProps {
-  label: string | undefined;
-  options: string[];
+  label?: string;
+  options: { id: number | string; value: string }[];
+  value: string | number;
+  onChange: (value: string | number) => void;
 }
-const DropdownSelect = ({ label, options }: DropdownProps) => {
-  const [selectedOption, setSelectedOption] = useState<string>("");
-  const [isOptionSelected, setIsOptionSelected] = useState<boolean>(false);
 
-  const changeTextColor = () => {
-    setIsOptionSelected(true);
+const DropDownSelect: React.FC<DropdownProps> = ({
+  label,
+  options,
+  value,
+  onChange,
+}) => {
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newValue = e.target.value;
+    if (typeof value == "number") {
+      onChange(+newValue);
+      return;
+    }
+
+    onChange(newValue);
   };
 
   return (
@@ -24,19 +35,17 @@ const DropdownSelect = ({ label, options }: DropdownProps) => {
 
       <div className="relative z-20 bg-transparent dark:bg-form-input">
         <select
-          value={selectedOption}
-          onChange={(e) => {
-            setSelectedOption(e.target.value);
-            changeTextColor();
-          }}
-          className={`relative z-20 w-full appearance-none rounded border border-stroke bg-transparent px-5 py-3 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary ${
-            isOptionSelected ? "text-slate-500 dark:text-white" : ""
-          }`}
+          value={value}
+          onChange={handleChange}
+          className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent px-5 py-3 text-slate-500 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
         >
+          <option value="" disabled>
+            Select an option
+          </option>
           {options &&
             options.map((option) => (
-              <option value={option} className="text-body dark:text-bodydark">
-                {option}
+              <option key={option.id} value={option.id}>
+                {option.value}
               </option>
             ))}
         </select>
@@ -49,4 +58,4 @@ const DropdownSelect = ({ label, options }: DropdownProps) => {
   );
 };
 
-export default DropdownSelect;
+export default DropDownSelect;

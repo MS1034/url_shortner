@@ -25,3 +25,13 @@ export default function transformData<T extends Record<string, any>>(
     return transformedItem;
   });
 }
+
+export interface TableColumnConfig<T> {
+  displayName: string;
+  show: boolean;
+  render?: (row: T) => React.ReactNode;
+}
+
+export type TableConfig<T> = {
+  [key in keyof T]?: TableColumnConfig<T>;
+};

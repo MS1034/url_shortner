@@ -18,8 +18,14 @@ export const logoApi = createApi({
   tagTypes: ["Logo"],
   endpoints: (builder) => ({
     fetchLogos: builder.query({
-      query: ({ page, pageSize }) => ({
+      query: () => ({
         url: `/logos`,
+      }),
+      providesTags: ["Logo"],
+    }),
+    fetchLogosPaginated: builder.query({
+      query: ({ page, pageSize }) => ({
+        url: `/logos/paginated`,
         params: {
           page: page.toString(),
           pageSize: pageSize.toString(),
@@ -109,6 +115,7 @@ export const logoApi = createApi({
 
 export const {
   useFetchLogosQuery,
+  useFetchLogosPaginatedQuery,
   useCreateLogoMutation,
   useUpdateLogoMutation,
   useDeleteLogoMutation,

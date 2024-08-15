@@ -1,4 +1,5 @@
 import {
+  ConflictException,
   ForbiddenException,
   Injectable,
   NotFoundException,
@@ -58,7 +59,7 @@ export class LogoService {
     });
   }
 
-  async findAll({
+  async findPaginated({
     user_id,
     page,
     pageSize,
@@ -78,6 +79,15 @@ export class LogoService {
         page,
       },
     );
+  }
+
+  async findAll(user_id: string): Promise<Logo[]> {
+    return this.prisma.logo.findMany({
+      where: {
+        user_id: user_id,
+        is_deleted: false,
+      },
+    });
   }
 
   async findOne(id: number, userId: string) {
@@ -145,17 +155,26 @@ export class LogoService {
       data: { logo_path: updateLogoDto.logo_path, updated_at: new Date() },
     });
   }
-
   async softDelete(id: number, userId: string) {
-    const logo = await this.prisma.logo.findUnique({ where: { logo_id: id } });
-
+    const logo = await this.prisma.logo.findUnique({
+      where: { logo_id: id },
+    });
     if (!logo) {
       throw new NotFoundException(`Logo with ID ${id} not found`);
     }
-
     if (logo.user_id !== userId) {
       throw new ForbiddenException(
         'You are not authorized to delete this logo',
+      );
+    }
+
+    const references = await this.prisma.url.count({
+      where: { logo_id: id, is_deleted: false },
+    });
+
+    if (references > 0) {
+      throw new ConflictException(
+        'The logo is referenced in other records and cannot be deleted',
       );
     }
 
@@ -176,9 +195,8 @@ export class LogoService {
 
     await cloudinary.uploader.destroy(logo.logo_path);
 
-    return this.prisma.logo.update({
+    return this.prisma.logo.delete({
       where: { logo_id: id },
-      data: { is_deleted: true, deleted_at: new Date() },
     });
   }
 }

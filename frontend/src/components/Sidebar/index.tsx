@@ -12,6 +12,7 @@ import { LuLink, LuKey } from "react-icons/lu";
 import { RiImageCircleLine } from "react-icons/ri";
 import { BsTags, BsXLg } from "react-icons/bs";
 import { IoStatsChartOutline } from "react-icons/io5";
+import { CiLogout } from "react-icons/ci";
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -46,6 +47,11 @@ const menuGroups = [
         icon: <LuKey size={20} />,
         label: "API Keys",
         route: "/api-keys",
+      },
+      {
+        icon: <CiLogout size={20} />,
+        label: "Logout",
+        route: "/login",
       },
     ],
   },

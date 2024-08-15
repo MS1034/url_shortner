@@ -12,23 +12,36 @@ interface AuthUser {
 
 export default class JWTHelper {
   static getRole() {
-    const token = localStorage.getItem(tokenKey);
-    if (token) {
-      const { user_role, role_id } = jwtDecode<AuthUser>(token);
-      return { user_role, role_id };
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem(tokenKey);
+      if (token) {
+        const { user_role, role_id } = jwtDecode<AuthUser>(token);
+        return { user_role, role_id };
+      }
+      throw new Error("Token is null");
     }
-    throw new Error("Token is null");
+    throw new Error("localStorage is not available");
   }
-  static getToken() {
-    return localStorage.getItem(tokenKey);
-  }
-  static isAuthenticated() {
-    console.log(localStorage.getItem(tokenKey));
-    console.log(localStorage.getItem(tokenKey) ? true : false);
 
-    return localStorage.getItem(tokenKey) ? true : false;
+  static getToken() {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem(tokenKey);
+    }
+    throw new Error("localStorage is not available");
   }
+
+  static isAuthenticated() {
+    if (typeof window !== "undefined") {
+      console.log(localStorage.getItem(tokenKey));
+      console.log(localStorage.getItem(tokenKey) ? true : false);
+      return localStorage.getItem(tokenKey) ? true : false;
+    }
+    return false;
+  }
+
   static clearToken() {
-    localStorage.removeItem(tokenKey);
+    if (typeof window !== "undefined") {
+      localStorage.removeItem(tokenKey);
+    }
   }
 }
