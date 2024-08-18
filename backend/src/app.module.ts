@@ -10,7 +10,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { APP_FILTER, APP_INTERCEPTOR, APP_GUARD } from '@nestjs/core';
 import { HttpExceptionFilter } from './common/filters/http-exception/http-exception.filter';
 import { ResponseInterceptor } from './common/interceptors/response/response.interceptor';
-import { AuthGuard } from './common/guards/auth/auth.guard';
+import { JwtOrApiKeyGuard } from './common/guards/auth/auth.guard';
 import { Reflector } from '@nestjs/core';
 import { AuthService } from './modules/auth/auth.service';
 import { UrlModule } from './modules/url/url.module';
@@ -21,6 +21,8 @@ import { TagsModule } from './modules/tags/tags.module';
 import { AnalyticsModule } from './modules/analytics/analytics.module';
 import { IpGeolocationService } from './modules/ip-geolocation/ip-geolocation.service';
 import { CachingModule } from './modules/caching/caching.module';
+import { ApiKeyModule } from './modules/api-key/api-key.module';
+import { ApiKeyService } from './modules/api-key/api-key.service';
 
 @Module({
   imports: [
@@ -41,6 +43,7 @@ import { CachingModule } from './modules/caching/caching.module';
     TagsModule,
     AnalyticsModule,
     CachingModule,
+    ApiKeyModule,
   ],
   controllers: [],
   providers: [
@@ -54,10 +57,11 @@ import { CachingModule } from './modules/caching/caching.module';
     },
     {
       provide: APP_GUARD,
-      useClass: AuthGuard,
+      useClass: JwtOrApiKeyGuard,
     },
     Reflector,
     AuthService,
+    ApiKeyService,
     UrlService,
     IpGeolocationService,
   ],

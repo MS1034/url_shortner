@@ -25,13 +25,21 @@ export class HttpLoggerMiddleware implements NestMiddleware {
     const chunks: Buffer[] = [];
 
     response.write = function (chunk: any) {
-      chunks.push(chunk);
+      if (typeof chunk === 'string') {
+        chunks.push(Buffer.from(chunk));
+      } else if (Buffer.isBuffer(chunk)) {
+        chunks.push(chunk);
+      }
       return oldWrite.apply(response, arguments);
     };
 
     response.end = function (chunk: any) {
       if (chunk) {
-        chunks.push(chunk);
+        if (typeof chunk === 'string') {
+          chunks.push(Buffer.from(chunk));
+        } else if (Buffer.isBuffer(chunk)) {
+          chunks.push(chunk);
+        }
       }
       return oldEnd.apply(response, arguments);
     };
