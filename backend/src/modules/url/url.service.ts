@@ -84,7 +84,7 @@ export class UrlService {
     throw new Error('Quantity must be greater than zero');
   }
 
-  async findAll({
+  async findPaginated({
     where,
     orderBy,
     include,
@@ -111,6 +111,15 @@ export class UrlService {
       },
     );
     // return this.prisma.url.findMany();
+  }
+
+  async findAll(user_id: string): Promise<Url[]> {
+    return this.prisma.url.findMany({
+      where: {
+        user_id: user_id,
+        is_deleted: false,
+      },
+    });
   }
 
   async findOne(id: string): Promise<Url> {

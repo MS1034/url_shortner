@@ -40,8 +40,8 @@ const menuGroups = [
       },
       {
         icon: <IoStatsChartOutline size={20} />,
-        label: "Url Stats",
-        route: "/url-stats",
+        label: "Url Analytics",
+        route: "/url-analytics",
       },
       {
         icon: <LuKey size={20} />,

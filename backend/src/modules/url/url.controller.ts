@@ -58,7 +58,10 @@ export class UrlController {
     const user_id = req.user.user_id;
     // console.log(query.page, query.pageSize);
     if (user_id) {
-      const result = await this.urlService.findAll({
+      if (!query.pageSize) {
+        return this.urlService.findAll(user_id);
+      }
+      const result = await this.urlService.findPaginated({
         where: {
           user_id,
           is_deleted: false,

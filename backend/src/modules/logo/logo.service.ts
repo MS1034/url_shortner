@@ -185,15 +185,20 @@ export class LogoService {
   }
 
   async remove(id: number, user_id: string) {
-    const logo = await this.findOne(id, user_id);
+    const logo = await this.prisma.logo.findFirst({
+      where: {
+        logo_id: id,
+        user_id: user_id,
+      },
+    });
 
     if (logo.user_id !== user_id) {
       throw new ForbiddenException(
         `You are not authorized to delete this logo`,
       );
     }
-
-    await cloudinary.uploader.destroy(logo.logo_path);
+    const publicId = logo.logo_path.split('/').pop().split('.')[0];
+    await cloudinary.uploader.destroy(`logos/${publicId}`);
 
     return this.prisma.logo.delete({
       where: { logo_id: id },

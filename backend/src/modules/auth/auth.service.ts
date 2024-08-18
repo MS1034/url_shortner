@@ -20,7 +20,7 @@ export class AuthService {
     if (!user) {
       throw new UnauthorizedException('User does not exist');
     }
-
+    console.log(user.user_id);
     const isAuthorized = await PasswordHelper.compareHash(
       password,
       user.password_hash,

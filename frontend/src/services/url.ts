@@ -5,7 +5,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const urlApi = createApi({
   reducerPath: "urlApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: process.env.BASE_URL || "http://localhost:5000/api/v1",
+    baseUrl: process.env.BASE_URL || "http://192.168.0.106:5000/api/v1",
     prepareHeaders: (headers) => {
       const token = JWTHelper.getToken();
       if (token) {

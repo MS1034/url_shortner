@@ -18,6 +18,9 @@ import { UrlService } from './modules/url/url.service';
 import { LogoModule } from './modules/logo/logo.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { TagsModule } from './modules/tags/tags.module';
+import { AnalyticsModule } from './modules/analytics/analytics.module';
+import { IpGeolocationService } from './modules/ip-geolocation/ip-geolocation.service';
+import { CachingModule } from './modules/caching/caching.module';
 
 @Module({
   imports: [
@@ -36,6 +39,8 @@ import { TagsModule } from './modules/tags/tags.module';
     LogoModule,
     CloudinaryModule,
     TagsModule,
+    AnalyticsModule,
+    CachingModule,
   ],
   controllers: [],
   providers: [
@@ -54,6 +59,7 @@ import { TagsModule } from './modules/tags/tags.module';
     Reflector,
     AuthService,
     UrlService,
+    IpGeolocationService,
   ],
 })
 export class AppModule {}
