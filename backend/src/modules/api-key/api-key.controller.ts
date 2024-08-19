@@ -4,10 +4,11 @@ import {
   Delete,
   Get,
   Post,
+  Put,
   Request,
   UnauthorizedException,
 } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { ApiKey, Prisma } from '@prisma/client';
 import { ApiKeyService } from './api-key.service';
 
 @Controller('api-key')
@@ -31,14 +32,35 @@ export class ApiKeyController {
     throw new UnauthorizedException('User does not exist');
   }
 
+  @Put()
+  async updateApiKey(
+    @Request() req,
+    @Body() updateApiKeyDto: Prisma.ApiKeyUpdateInput,
+  ): Promise<{ apiKey: string }> {
+    const user_id = req.user.user_id;
+    if (!user_id) {
+      throw new UnauthorizedException('User does not exist');
+    }
+
+    try {
+      const updatedApiKey = await this.apiKeyService.updateApiKey(
+        user_id,
+        updateApiKeyDto,
+      );
+      return { apiKey: updatedApiKey.api_key };
+    } catch (error) {
+      throw error; // Let the service layer handle the specific error
+    }
+  }
+
   @Get()
-  async getApiKey(@Request() req): Promise<{ apiKey: string | null }> {
+  async getApiKey(@Request() req): Promise<ApiKey> {
     const user_id = req.user.user_id;
     console.log(user_id, 'Ali');
 
     if (user_id) {
       const apiKey = await this.apiKeyService.getApiKey(user_id);
-      return { apiKey };
+      return apiKey;
     }
 
     throw new UnauthorizedException('User does not exist');

@@ -30,6 +30,13 @@ export default class JWTHelper {
     throw new Error("localStorage is not available");
   }
 
+  static deleteToken() {
+    if (typeof window !== "undefined") {
+      localStorage.removeItem(tokenKey);
+    }
+    throw new Error("localStorage is not available");
+  }
+
   static isAuthenticated() {
     if (typeof window !== "undefined") {
       console.log(localStorage.getItem(tokenKey));

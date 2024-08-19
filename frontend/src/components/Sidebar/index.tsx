@@ -1,10 +1,7 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
-import { usePathname } from "next/navigation";
-import Link from "next/link";
-import Image from "next/image";
-import SidebarItem from "@/components/Sidebar/SidebarItem";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import ClickOutside from "@/components/ClickOutside";
 import useLocalStorage from "@/hooks/useLocalStorage";
 import { sacramento } from "@/commons/helpers/FontHelper";
@@ -13,6 +10,8 @@ import { RiImageCircleLine } from "react-icons/ri";
 import { BsTags, BsXLg } from "react-icons/bs";
 import { IoStatsChartOutline } from "react-icons/io5";
 import { CiLogout } from "react-icons/ci";
+import JWTHelper from "@/commons/helpers/JwtHelper";
+import SidebarItem from "./SidebarItem";
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -48,18 +47,24 @@ const menuGroups = [
         label: "API Keys",
         route: "/api-keys",
       },
-      {
-        icon: <CiLogout size={20} />,
-        label: "Logout",
-        route: "/login",
-      },
     ],
   },
 ];
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
-  const pathname = usePathname();
+  const router = useRouter();
   const [pageName, setPageName] = useLocalStorage("selectedMenu", "dashboard");
+
+  useEffect(() => {
+    // Perform cleanup or setup code if needed
+  }, []);
+
+  const handleLogout = () => {
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("auth-token"); // Clear token from localStorage
+      router.push("/login"); // Redirect to login page
+    }
+  };
 
   return (
     <ClickOutside onClick={() => setSidebarOpen(false)}>
@@ -68,22 +73,21 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        {/* <!-- SIDEBAR HEADER --> */}
+        {/* SIDEBAR HEADER */}
         <div
           className={`flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5 `}
         >
           <a href="#" className="mb-8 inline-block max-w-full text-black">
-            <Image
+            <img
               width={32}
               height={32}
               src={"/assets/images/logo.png"}
               alt="Logo"
-              priority
               className="inline-block"
             />
             <span className={` ${sacramento.className} text-primary text-3xl`}>
               link.ly
-            </span>{" "}
+            </span>
           </a>
 
           <button
@@ -94,10 +98,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
             <BsXLg />
           </button>
         </div>
-        {/* <!-- SIDEBAR HEADER --> */}
 
         <div className="no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear">
-          {/* <!-- Sidebar Menu --> */}
+          {/* Sidebar Menu */}
           <nav className="mt-5 px-4 py-4 lg:mt-9 lg:px-6">
             {menuGroups.map((group, groupIndex) => (
               <div key={groupIndex}>
@@ -115,11 +118,21 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                       setPageName={setPageName}
                     />
                   ))}
+                  <li>
+                    <button
+                      onClick={handleLogout}
+                      className={
+                        "group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4"
+                      }
+                    >
+                      <CiLogout size={20} />
+                      Logout
+                    </button>
+                  </li>
                 </ul>
               </div>
             ))}
           </nav>
-          {/* <!-- Sidebar Menu --> */}
         </div>
       </aside>
     </ClickOutside>

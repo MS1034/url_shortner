@@ -1,3 +1,5 @@
+"use client";
+import withAuth from "@/components/WithAuth";
 import { Metadata } from "next";
 import Link from "next/link";
 
@@ -9,4 +11,4 @@ const FormLayout = () => {
   );
 };
 
-export default FormLayout;
+export default withAuth(FormLayout, true, ["admin", "user"]);

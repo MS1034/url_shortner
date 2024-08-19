@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
 import * as crypto from 'crypto';
-import { User } from '@prisma/client';
+import { ApiKey, Prisma, User } from '@prisma/client';
 
 @Injectable()
 export class ApiKeyService {
@@ -20,7 +20,6 @@ export class ApiKeyService {
       throw new UnauthorizedException('User ID is required');
     }
 
-    // Check if the user exists
     const userExists = await this.prisma.user.findUnique({
       where: { user_id: user_id },
     });
@@ -38,10 +37,8 @@ export class ApiKeyService {
       throw new ConflictException('API key already exists for this user');
     }
 
-    // Generate a new API key
     const apiKey = crypto.randomBytes(32).toString('hex');
 
-    // Create the API key record
     await this.prisma.apiKey.create({
       data: {
         user_id: user_id,
@@ -53,18 +50,49 @@ export class ApiKeyService {
     return apiKey;
   }
 
-  async getApiKey(user_id: string): Promise<string | null> {
+  async getApiKey(user_id: string): Promise<ApiKey> {
     const apiKeyRecord = await this.prisma.apiKey.findFirst({
       where: { user_id: user_id },
     });
 
     if (apiKeyRecord && !apiKeyRecord.is_deleted) {
-      return apiKeyRecord.api_key;
+      return apiKeyRecord;
     }
 
     return null;
   }
+  async updateApiKey(
+    user_id: string,
+    updateApiKeyDto: Prisma.ApiKeyUpdateInput,
+  ): Promise<ApiKey> {
+    const apiKeyRecord = await this.prisma.apiKey.findFirst({
+      where: { user_id: user_id },
+    });
 
+    const { expires_at, is_deleted } = updateApiKeyDto;
+
+    if (!apiKeyRecord) {
+      throw new NotFoundException('API key not found');
+    }
+
+    if (is_deleted !== undefined) {
+      await this.prisma.apiKey.update({
+        where: { api_key_id: apiKeyRecord.api_key_id },
+        data: { is_deleted: is_deleted },
+      });
+    }
+
+    if (expires_at !== undefined) {
+      await this.prisma.apiKey.update({
+        where: { api_key_id: apiKeyRecord.api_key_id },
+        data: { expires_at: expires_at },
+      });
+    }
+
+    return this.prisma.apiKey.findUnique({
+      where: { api_key_id: apiKeyRecord.api_key_id },
+    });
+  }
   async deleteApiKey(user_id: string): Promise<void> {
     const apiKeyRecord = await this.prisma.apiKey.findFirst({
       where: { user_id: user_id },

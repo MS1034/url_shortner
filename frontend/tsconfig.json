@@ -21,6 +21,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/components/Tables/DataTable.tsx", "src/components/Dropdown/MultiSelect.jsx", "src/components/DatePicker/DateRangePicker.jsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/components/Tables/DataTable.tsx", "src/components/Dropdown/MultiSelect.jsx", "src/components/DatePicker/DateRangePicker.tsx"],
   "exclude": ["node_modules"]
 }

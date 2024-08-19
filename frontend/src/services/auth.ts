@@ -5,7 +5,7 @@ export const authApi = createApi({
   reducerPath: "authApi",
   baseQuery: fetchBaseQuery({
     // TODO: add in config file or env
-    baseUrl: process.env.BASE_URL || "http://192.168.0.106:5000/api/v1",
+    baseUrl: process.env.BASE_URL || "http://localhost:5000/api/v1",
 
     prepareHeaders: (headers, { getState }) => {
       const token = JWTHelper.getToken();

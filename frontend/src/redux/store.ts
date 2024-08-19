@@ -8,6 +8,7 @@ import { urlApi } from "@/services/url";
 import { logoApi } from "@/services/logo";
 import { urlTagsApi } from "@/services/url-tags";
 import { analyticsApi } from "@/services/analytics";
+import { apiKeysApi } from "@/services/api-keys";
 
 // Create the store with reducers and middleware
 export const makeStore = () =>
@@ -22,6 +23,7 @@ export const makeStore = () =>
       [logoApi.reducerPath]: logoApi.reducer,
       [urlTagsApi.reducerPath]: urlTagsApi.reducer,
       [analyticsApi.reducerPath]: analyticsApi.reducer,
+      [apiKeysApi.reducerPath]: apiKeysApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware().concat(
@@ -29,7 +31,8 @@ export const makeStore = () =>
         urlTagsApi.middleware,
         logoApi.middleware,
         urlApi.middleware,
-        analyticsApi.middleware
+        analyticsApi.middleware,
+        apiKeysApi.middleware
       ),
   });
 

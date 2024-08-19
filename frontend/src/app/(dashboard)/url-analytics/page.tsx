@@ -64,7 +64,7 @@ function UrlAnalytics() {
     defaultValues: {
       urls: [],
       tags: [],
-      startDate: oneWeekAgo,
+      startDate: undefined,
       endDate: currentDate,
     },
   });
@@ -95,8 +95,8 @@ function UrlAnalytics() {
       const { urls, tags, startDate, endDate } = data;
 
       getAnalytics({
-        startDate: startDate?.toISOString(),
-        endDate: endDate?.toISOString(),
+        startDate: oneWeekAgo?.toISOString(),
+        endDate: currentDate?.toISOString(),
       });
     })();
   }, [handleSubmit, getAnalytics]);
@@ -266,8 +266,8 @@ function UrlAnalytics() {
     reset({
       urls: [],
       tags: [],
-      startDate: oneWeekAgo,
-      endDate: currentDate,
+      startDate: undefined,
+      endDate: undefined,
     });
   };
 
@@ -315,6 +315,7 @@ function UrlAnalytics() {
             control={control}
             render={({ field }) => (
               <DateRangePicker
+                maxDate={new Date()}
                 {...field}
                 onDateChange={field.onChange}
                 placeholderText="Start Date"
@@ -329,6 +330,7 @@ function UrlAnalytics() {
             render={({ field }) => (
               <DateRangePicker
                 {...field}
+                maxDate={new Date()}
                 onDateChange={field.onChange}
                 placeholderText="End Date"
               />

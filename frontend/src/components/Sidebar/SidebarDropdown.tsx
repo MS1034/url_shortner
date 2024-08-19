@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 
 const SidebarDropdown = ({ item }: any) => {
   const pathname = usePathname();
-
+  alert(JSON.stringify(item));
   return (
     <>
       <ul className="mb-5.5 mt-4 flex flex-col gap-2.5 pl-6">

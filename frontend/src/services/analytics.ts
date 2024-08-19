@@ -21,7 +21,7 @@ export interface AnalyticsResponse {
     startDate?: string;
     endDate?: string;
   };
-  timestamp: string; // or `Date` if you prefer using the Date object
+  timestamp: string;
 }
 
 export const analyticsApi = createApi({
