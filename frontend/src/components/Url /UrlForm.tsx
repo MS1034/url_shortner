@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { UrlStatusEnum, UrlTypeEnum } from "@/commons/types/Url";
+import { Url, UrlStatusEnum, UrlTypeEnum } from "@/commons/types/Url";
 import DropdownSelect from "@/components/Dropdown/DropDownSelect";
 import DatePicker from "@/components/DatePicker/DatePicker";
 import {
@@ -31,6 +31,7 @@ type UrlFormProps = {
   isEditing: boolean;
   editingUrl: z.infer<typeof createUrlSchema> | null;
   onCancelEdit: () => void;
+  resetCreateForm: () => void;
 };
 
 const UrlForm = ({
@@ -43,6 +44,9 @@ const UrlForm = ({
   isEditing,
   editingUrl,
   setModalOpen,
+  onCancelEdit,
+
+  resetCreateForm,
 }: UrlFormProps) => {
   const {
     register: registerCreate,
@@ -64,10 +68,22 @@ const UrlForm = ({
   } = useForm<z.infer<typeof pregenerateUrlSchema>>({
     resolver: zodResolver(pregenerateUrlSchema),
   });
+
+  const filterEmptyFields = (data: any): any => {
+    return Object.keys(data).reduce((acc, key) => {
+      const value = data[key as keyof Url];
+      if (value !== undefined && value !== null && value !== "") {
+        acc[key] = value;
+      }
+      return acc;
+    }, {} as Url);
+  };
+
   useEffect(() => {
     if (isEditing && editingUrl) {
-      console.log("Editing URL data:", editingUrl); // Debug the data
-      resetCreate(editingUrl);
+      console.log("Editing URL data:", editingUrl);
+      const filteredData = filterEmptyFields(editingUrl);
+      resetCreate(filteredData);
     }
   }, [isEditing, editingUrl, resetCreate]);
 
@@ -86,7 +102,10 @@ const UrlForm = ({
   ) => {
     const isSubmitted = await onCreateUrl(formData);
     // alert(isSubmitted);
-    if (isSubmitted) resetCreate();
+    if (isSubmitted) {
+      resetCreateForm();
+      resetCreate();
+    }
   };
 
   const handlePregenerateUrlSubmit = async (
@@ -360,12 +379,24 @@ const UrlForm = ({
         {selectedTab === "pregenerate"
           ? renderFormFieldsPregenerate()
           : renderFormFieldsCreate()}
-        <button
-          type="submit"
-          className="flex justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90 max-w-xs"
-        >
-          {selectedTab === "pregenerate" ? "Pre-generate" : "Shorten"}
-        </button>
+
+        <div className="flex flex-row gap-4">
+          <button
+            onClick={onCancelEdit}
+            type="button"
+            className={`${
+              !isEditing ? "hidden" : "block"
+            } flex justify-center rounded border-primary bordder-sm p-3 font-medium text-primary hover:bg-opacity-90 max-w-xs`}
+          >
+            Clear
+          </button>
+          <button
+            type="submit"
+            className="flex justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90 max-w-xs"
+          >
+            {selectedTab === "pregenerate" ? "Pre-generate" : "Shorten"}
+          </button>
+        </div>
       </div>
     </form>
   );

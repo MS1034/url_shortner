@@ -1,25 +1,24 @@
 "use client";
-import React, { useState, useEffect, Suspense } from "react";
-import HourlyClickChart from "@/components/Analytics/HourlyClickChart";
-import VerticalBarChart from "@/components/Analytics/VerticalBarChart";
-import CardDataStats from "@/components/CardStats";
-import { BsEye, BsFillPersonPlusFill, BsPerson } from "react-icons/bs";
-import PieChart from "@/components/Analytics/PiChart";
-import dynamic from "next/dynamic";
-import SkeletonDateRangePicker from "@/components/DatePicker/DatePickerSkeleton";
-import { useFetchTagsQuery } from "@/services/url-tags";
-import { useFetchUrlsQuery } from "@/services/url";
-import { Tag } from "@/commons/types/Tags";
-import { Url } from "@/commons/types/Url";
-import { z } from "zod";
+import React, { useEffect } from "react";
+import { usePathname } from "next/navigation";
+
 import { Controller, useForm } from "react-hook-form";
+import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import MultiSelect from "@/components/Dropdown/MultiSelect";
 import DateRangePicker from "@/components/DatePicker/DateRangePicker";
+import { useFetchTagsQuery } from "@/services/url-tags";
+import { useFetchUrlsQuery } from "@/services/url";
 import { useLazyGetAnalyticsQuery } from "@/services/analytics";
-import LineChart from "@/components/Analytics/LineChart";
 import GeneratePDFButton from "@/components/Analytics/GenerateReportButton";
 import millify from "millify";
+import CardDataStats from "@/components/CardStats";
+import { BsEye, BsFillPersonPlusFill, BsPerson } from "react-icons/bs";
+import HourlyClickChart from "@/components/Analytics/HourlyClickChart";
+import VerticalBarChart from "@/components/Analytics/VerticalBarChart";
+import LineChart from "@/components/Analytics/LineChart";
+import PieChart from "@/components/Analytics/PiChart";
+import toast from "react-hot-toast";
 
 const schema = z
   .object({
@@ -44,10 +43,14 @@ const schema = z
   );
 
 function UrlAnalytics() {
+  const pathname = usePathname();
+  const urlId = pathname.split("/").at(-1);
   const { data: tags, isLoading: tagsLoading } = useFetchTagsQuery({});
   const { data: urls, isLoading: urlsLoading } = useFetchUrlsQuery({});
-  const [getAnalytics, { data: analytics, isLoading: analyticsLoading }] =
-    useLazyGetAnalyticsQuery();
+  const [
+    getAnalytics,
+    { data: analytics, isLoading: analyticsLoading, isError: analyticsError },
+  ] = useLazyGetAnalyticsQuery();
 
   const currentDate = new Date();
   const oneWeekAgo = new Date(currentDate);
@@ -91,10 +94,20 @@ function UrlAnalytics() {
   };
 
   useEffect(() => {
+    if (analyticsError) {
+      console.error("Error fetching analytics:", analyticsError);
+      toast.error(
+        "Failed to fetch analytics data. Wrong UrlId or UrlId does not exits"
+      );
+    }
+  }, [analyticsError]);
+
+  useEffect(() => {
     handleSubmit((data) => {
       const { urls, tags, startDate, endDate } = data;
 
       getAnalytics({
+        urlIds: urlId ? [urlId] : [],
         startDate: oneWeekAgo?.toISOString(),
         endDate: currentDate?.toISOString(),
       });
@@ -277,30 +290,34 @@ function UrlAnalytics() {
         onSubmit={handleSubmit(onSubmit)}
         className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5"
       >
-        <Controller
-          name="urls"
-          control={control}
-          render={({ field }) => (
-            <MultiSelect
-              {...field}
-              options={urlOptions}
-              label="Select Urls"
-              isLoading={urlsLoading}
-            />
-          )}
-        />
-        <Controller
-          name="tags"
-          control={control}
-          render={({ field }) => (
-            <MultiSelect
-              {...field}
-              options={tagOptions}
-              label="Select Tags"
-              isLoading={tagsLoading}
-            />
-          )}
-        />
+        {!urlId && (
+          <Controller
+            name="urls"
+            control={control}
+            render={({ field }) => (
+              <MultiSelect
+                {...field}
+                options={urlOptions}
+                label="Select Urls"
+                isLoading={urlsLoading}
+              />
+            )}
+          />
+        )}
+        {!urlId && (
+          <Controller
+            name="tags"
+            control={control}
+            render={({ field }) => (
+              <MultiSelect
+                {...field}
+                options={tagOptions}
+                label="Select Tags"
+                isLoading={tagsLoading}
+              />
+            )}
+          />
+        )}
         <div className="min-h-8 min-w-32">
           <Controller
             name="startDate"

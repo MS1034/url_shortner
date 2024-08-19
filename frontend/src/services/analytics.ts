@@ -27,7 +27,7 @@ export interface AnalyticsResponse {
 export const analyticsApi = createApi({
   reducerPath: "analyticsApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: process.env.BASE_URL || "http://192.168.0.106:5000/api/v1",
+    baseUrl: process.env.BASE_URL || "http://localhost:5000/api/v1",
     prepareHeaders: (headers, { getState }) => {
       const token = JWTHelper.getToken();
       if (token) {

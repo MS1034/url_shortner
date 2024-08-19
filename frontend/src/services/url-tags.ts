@@ -6,7 +6,7 @@ const baseName = "/tags";
 export const urlTagsApi = createApi({
   reducerPath: "urlTagsApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://192.168.0.106:5000/api/v1" + baseName,
+    baseUrl: "http://localhost:5000/api/v1" + baseName,
     prepareHeaders: (headers, { getState }) => {
       const token = JWTHelper.getToken();
       if (token) {

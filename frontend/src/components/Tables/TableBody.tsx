@@ -9,6 +9,7 @@ import { IoStatsChartOutline } from "react-icons/io5";
 import Entity from "@/commons/Enums/Entity";
 import { TableConfig } from "@/commons/helpers/SerializationHelper";
 import { Url } from "@/commons/types/Url";
+import { useRouter } from "next/navigation";
 
 interface TableBodyProps<T extends TableRowData> {
   data: T[];
@@ -63,6 +64,7 @@ const TableBody = <T extends TableRowData>({
   };
 
   const baseUrl = "http://localhost:5000/api/v1/";
+  const router = useRouter();
 
   return (
     <>
@@ -109,7 +111,9 @@ const TableBody = <T extends TableRowData>({
                     </button>
                     <button
                       className="hover:text-primary"
-                      onClick={() => openViewDetailsModal(row)}
+                      onClick={() =>
+                        router.push(`/url-analytics/${row["url_id"]}`)
+                      }
                     >
                       <IoStatsChartOutline size={18} />
                     </button>

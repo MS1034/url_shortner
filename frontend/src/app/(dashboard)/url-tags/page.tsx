@@ -103,8 +103,12 @@ const UrlTagsPage = () => {
   ];
 
   const handleParamsChange = ({ page, pageSize }: ParamsChange) => {
-    if (page !== undefined) dispatch(setPage(page));
-    if (pageSize !== undefined) dispatch(setPageSize(pageSize));
+    const total = data?.result?.meta.total;
+    if (total) {
+      page = Math.min(pageSize || 0, Math.ceil(total / (pageSize || 1)));
+      if (page !== undefined) dispatch(setPage(page));
+      if (pageSize !== undefined) dispatch(setPageSize(pageSize));
+    }
   };
 
   const transformedData = data?.result?.data

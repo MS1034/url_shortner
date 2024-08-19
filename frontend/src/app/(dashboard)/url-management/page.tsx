@@ -40,16 +40,24 @@ const UrlShortenerPage = () => {
   const [createUrl] = useCreateUrlMutation();
   const [updateUrl] = useUpdateUrlMutation();
   const [preGenerateUrl] = usePregenerateUrlMutation();
+  const [formKey, setFormKey] = useState<number>(0);
 
+  const resetCreate = () => {
+    setFormKey((prevKey) => prevKey + 1);
+  };
   const handleParamsChange = ({ page, pageSize }: ParamsChange) => {
-    if (page !== undefined) dispatch(setPage(page));
-    if (pageSize !== undefined) dispatch(setPageSize(pageSize));
+    const total = data?.result?.meta.total;
+    if (total) {
+      page = Math.min(pageSize || 0, Math.ceil(total / (pageSize || 1)));
+      if (page !== undefined) dispatch(setPage(page));
+      if (pageSize !== undefined) dispatch(setPageSize(pageSize));
+    }
   };
 
   const handleCreateUrlSubmit = async (
     formData: z.infer<typeof createUrlSchema>
   ) => {
-    // alert("submitted");
+    alert("submitted");
 
     try {
       if (previewLogo) formData.logo_id = previewLogo.logo_id;
@@ -137,7 +145,11 @@ const UrlShortenerPage = () => {
     <>
       <div className="flex flex-col gap-9 mb-5">
         <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-          <TabNav selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
+          <TabNav
+            selectedTab={selectedTab}
+            isEditing={isEditing}
+            setSelectedTab={setSelectedTab}
+          />
           <UrlForm
             selectedTab={selectedTab}
             onCreateUrl={handleCreateUrlSubmit}
@@ -148,9 +160,13 @@ const UrlShortenerPage = () => {
             setModalOpen={setModalOpen}
             isEditing={isEditing}
             editingUrl={editingUrl}
+            key={formKey}
+            resetCreateForm={resetCreate}
             onCancelEdit={() => {
               setIsEditing(false);
               setEditingUrl(null);
+              resetCreate();
+              setPreviewLogo(null);
             }}
           />
         </div>
