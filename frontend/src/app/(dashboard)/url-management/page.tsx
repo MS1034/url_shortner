@@ -7,9 +7,9 @@ import {
 } from "@/commons/Schemas/url.schema";
 import { BrandLogo } from "@/commons/types/Logo";
 import SelectLogoModal from "@/components/Logo/SelectLogoModal";
-import UrlDataTable from "@/components/Url /UrlDataTable";
-import UrlForm from "@/components/Url /UrlForm";
-import TabNav from "@/components/Url /UrlTable";
+import UrlDataTable from "@/components/Url/UrlDataTable";
+import UrlForm from "@/components/Url/UrlForm";
+import TabNav from "@/components/Url/UrlTable";
 import withAuth from "@/components/WithAuth";
 import { setPage, setPageSize } from "@/redux/Features/slices/paramsSlice";
 import { AppDispatch, RootState } from "@/redux/store";
